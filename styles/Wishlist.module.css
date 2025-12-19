@@ -1,0 +1,49 @@
+.main {
+    min-height: calc(100vh - var(--header-height));
+    padding: 3rem 0;
+}
+
+.pageTitle {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.pageSubtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-bottom: 3rem;
+}
+
+.emptyWishlist {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: var(--bg-card);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-md);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.emptyIcon {
+    font-size: 6rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.emptyWishlist h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.emptyWishlist p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}

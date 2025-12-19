@@ -1,0 +1,132 @@
+.main {
+    min-height: calc(100vh - var(--header-height));
+    padding: 4rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.successCard {
+    background: var(--bg-card);
+    border-radius: var(--border-radius-xl);
+    padding: 4rem 3rem;
+    box-shadow: var(--shadow-xl);
+    max-width: 700px;
+    text-align: center;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.successIcon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 2rem;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--text-white);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.successTitle {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.successMessage {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.orderDetails {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    text-align: left;
+}
+
+.detailRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+    gap: 1rem;
+}
+
+.detailRow:last-child {
+    border-bottom: none;
+}
+
+.detailLabel {
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 150px;
+}
+
+.detailValue {
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: right;
+    flex: 1;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.infoBox {
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    border: 2px solid rgba(102, 126, 234, 0.2);
+}
+
+.infoBox p {
+    margin: 0.5rem 0;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .successCard {
+        padding: 3rem 2rem;
+    }
+
+    .successTitle {
+        font-size: 2rem;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+    }
+
+    .actionButtons .btn {
+        width: 100%;
+    }
+
+    .detailRow {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detailLabel {
+        min-width: auto;
+    }
+
+    .detailValue {
+        text-align: left;
+    }
+}

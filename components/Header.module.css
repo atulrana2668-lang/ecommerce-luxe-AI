@@ -1,0 +1,225 @@
+.header {
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 1.5rem;
+    min-height: var(--header-height);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.logoIcon {
+    font-size: 2rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.logoText {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.searchBar {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.875rem 3rem 0.875rem 1.25rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-xl);
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+    background: var(--bg-secondary);
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.searchButton {
+    position: absolute;
+    right: 0.5rem;
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: var(--border-radius-md);
+    padding: 0.625rem;
+    color: var(--text-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.searchButton:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.navLink {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: color var(--transition-fast);
+}
+
+.navLink::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: width var(--transition-normal);
+}
+
+.navLink:hover {
+    color: var(--primary-color);
+}
+
+.navLink:hover::after {
+    width: 100%;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.actionButton {
+    position: relative;
+    padding: 0.625rem;
+    border-radius: var(--border-radius-md);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+}
+
+.actionButton:hover {
+    background: var(--primary-gradient);
+    color: var(--text-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--secondary-gradient);
+    color: var(--text-white);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.4rem;
+    border-radius: 50px;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(245, 87, 108, 0.4);
+}
+
+.mobileMenuButton {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.mobileMenu {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+
+.mobileNavLink {
+    padding: 1rem 1.5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
+}
+
+.mobileNavLink:hover {
+    background: var(--bg-secondary);
+    border-left-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+@media (max-width: 1024px) {
+    .nav {
+        display: none;
+    }
+
+    .mobileMenuButton {
+        display: block;
+    }
+
+    .mobileMenu {
+        display: flex;
+    }
+}
+
+@media (max-width: 768px) {
+    .headerContainer {
+        gap: 1rem;
+    }
+
+    .searchBar {
+        order: 3;
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+
+    .actions {
+        gap: 0.5rem;
+    }
+
+    .logoText {
+        display: none;
+    }
+}
