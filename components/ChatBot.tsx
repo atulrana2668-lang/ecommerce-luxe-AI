@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from '@/styles/ChatBot.module.css';
 
-// Using environment variable for API key (secure)
-const API_URL = '/api/chat';
+// Using environment variable for API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+    ? `${process.env.NEXT_PUBLIC_API_URL}/chat`
+    : '/api/chat';
 
 export default function ChatBot() {
     const [isOpen, setIsOpen] = useState(false);
