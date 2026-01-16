@@ -48,7 +48,12 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'https://luxe-ecommerce-ai.vercel.app',
+        'https://luxe-ecommerce-f57d8y4yw-atuls-projects-e5a5674f.vercel.app'
+    ],
     credentials: true
 }));
 app.use(express.json());
