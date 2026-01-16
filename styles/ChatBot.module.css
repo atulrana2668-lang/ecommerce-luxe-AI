@@ -1,0 +1,124 @@
+/* Chatbot Container */
+.chatContainer {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 350px;
+    max-height: 500px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+/* Chat Header */
+.chatHeader {
+    background: #1a73e8;
+    /* Google Blue */
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Message Display Area */
+.chatBox {
+    flex-grow: 1;
+    height: 300px;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f9f9f9;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Input Area */
+.inputArea {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+.userInput {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 15px;
+    outline: none;
+}
+
+.sendBtn {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sendBtn:hover {
+    background: #1557b0;
+}
+
+.userMessage {
+    align-self: flex-end;
+    background: #e3f2fd;
+    padding: 8px 12px;
+    border-radius: 15px 15px 0 15px;
+    max-width: 80%;
+}
+
+.aiMessage {
+    align-self: flex-start;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 15px 15px 15px 0;
+    max-width: 80%;
+}
+
+.errorMessage {
+    color: red;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.toggleButton {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #1a73e8;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 24px;
+    transition: transform 0.2s;
+}
+
+.toggleButton:hover {
+    transform: scale(1.1);
+}
