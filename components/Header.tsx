@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/utils/AuthContext';
 import styles from './Header.module.css';
 
 interface HeaderProps {
@@ -8,15 +9,34 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ cartCount = 0, wishlistCount = 0 }) => {
-    const [isSearchOpen, setIsSearchOpen] = React.useState(false);
-    const [searchQuery, setSearchQuery] = React.useState('');
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+    const { user, isAuthenticated, logout } = useAuth();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const profileRef = useRef<HTMLDivElement>(null);
+
+    // Close profile dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+                setIsProfileOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (searchQuery.trim()) {
             window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
         }
+    };
+
+    const handleLogout = () => {
+        logout();
+        setIsProfileOpen(false);
+        window.location.href = '/';
     };
 
     return (
@@ -76,12 +96,60 @@ const Header: React.FC<HeaderProps> = ({ cartCount = 0, wishlistCount = 0 }) => 
                         {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
                     </Link>
 
-                    <Link href="/account" className={styles.actionButton}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeWidth="2" />
-                            <circle cx="12" cy="7" r="4" strokeWidth="2" />
-                        </svg>
-                    </Link>
+                    {/* Profile / Auth Section */}
+                    {isAuthenticated && user ? (
+                        <div className={styles.profileDropdown} ref={profileRef}>
+                            <button
+                                className={styles.profileButton}
+                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                            >
+                                <div className={styles.avatar}>
+                                    {user.name.charAt(0).toUpperCase()}
+                                </div>
+                                <span className={styles.userName}>{user.name.split(' ')[0]}</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ marginLeft: '4px' }}>
+                                    <path d="M6 9l6 6 6-6" strokeWidth="2" />
+                                </svg>
+                            </button>
+
+                            {isProfileOpen && (
+                                <div className={styles.dropdownMenu}>
+                                    <div className={styles.dropdownHeader}>
+                                        <div className={styles.dropdownAvatar}>
+                                            {user.name.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <p className={styles.dropdownName}>{user.name}</p>
+                                            <p className={styles.dropdownEmail}>{user.email}</p>
+                                        </div>
+                                    </div>
+                                    <div className={styles.dropdownDivider}></div>
+                                    <Link href="/account" className={styles.dropdownItem} onClick={() => setIsProfileOpen(false)}>
+                                        <span>👤</span> My Account
+                                    </Link>
+                                    <Link href="/account#orders" className={styles.dropdownItem} onClick={() => setIsProfileOpen(false)}>
+                                        <span>📦</span> My Orders
+                                    </Link>
+                                    <Link href="/wishlist" className={styles.dropdownItem} onClick={() => setIsProfileOpen(false)}>
+                                        <span>❤️</span> Wishlist
+                                    </Link>
+                                    <div className={styles.dropdownDivider}></div>
+                                    <button className={styles.dropdownLogout} onClick={handleLogout}>
+                                        <span>🚪</span> Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className={styles.authButtons}>
+                            <Link href="/login" className={styles.loginButton}>
+                                Login
+                            </Link>
+                            <Link href="/signup" className={styles.signupButton}>
+                                Sign Up
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -109,6 +177,27 @@ const Header: React.FC<HeaderProps> = ({ cartCount = 0, wishlistCount = 0 }) => 
                     <Link href="/products" className={styles.mobileNavLink}>
                         All Products
                     </Link>
+                    <div className={styles.mobileAuthSection}>
+                        {isAuthenticated && user ? (
+                            <>
+                                <Link href="/account" className={styles.mobileNavLink}>
+                                    My Account
+                                </Link>
+                                <button onClick={handleLogout} className={styles.mobileLogout}>
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" className={styles.mobileNavLink}>
+                                    Login
+                                </Link>
+                                <Link href="/signup" className={styles.mobileNavLink}>
+                                    Sign Up
+                                </Link>
+                            </>
+                        )}
+                    </div>
                 </div>
             )}
         </header>

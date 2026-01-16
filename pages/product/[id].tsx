@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { getProductById, addToCart, addToWishlist, removeFromWishlist, isInWishlist, getCartItemCount, getWishlist } from '@/utils/storage';
+import { addToCart, addToWishlist, removeFromWishlist, isInWishlist, getCartItemCount, getWishlist } from '@/utils/storage';
+import { getProductById } from '@/src/services/api';
 import type { Product } from '@/utils/storage';
 import styles from '@/styles/ProductDetail.module.css';
 
@@ -22,15 +23,24 @@ export default function ProductDetail() {
     const [inWishlist, setInWishlist] = useState(false);
 
     useEffect(() => {
-        if (id && typeof id === 'string') {
-            const foundProduct = getProductById(id);
-            if (foundProduct) {
-                setProduct(foundProduct);
-                setSelectedSize(foundProduct.sizes[0]);
-                setSelectedColor(foundProduct.colors[0]);
-                setInWishlist(isInWishlist(id));
+        const fetchProduct = async () => {
+            if (id && typeof id === 'string') {
+                try {
+                    const response = await getProductById(id);
+                    if (response.success && response.data.product) {
+                        const foundProduct = response.data.product;
+                        setProduct(foundProduct);
+                        setSelectedSize(foundProduct.sizes[0]);
+                        setSelectedColor(foundProduct.colors[0]);
+                        setInWishlist(isInWishlist(id));
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch product:', error);
+                }
             }
-        }
+        };
+
+        fetchProduct();
         setCartCount(getCartItemCount());
         setWishlistCount(getWishlist().length);
     }, [id]);

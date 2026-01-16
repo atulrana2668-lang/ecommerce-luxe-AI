@@ -1,56 +1,16 @@
 // Local Storage Management for E-commerce
 
-export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    originalPrice?: number;
-    category: string;
-    image: string;
-    description: string;
-    rating: number;
-    reviews: number;
-    inStock: boolean;
-    sizes: string[];
-    colors: string[];
-    discount?: number;
-}
+// Import unified types from shared types file
+import type {
+    Product,
+    CartItem,
+    User,
+    Address,
+    LegacyOrder as Order
+} from '@/src/types';
 
-export interface CartItem extends Product {
-    quantity: number;
-    selectedSize: string;
-    selectedColor: string;
-}
-
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    addresses: Address[];
-}
-
-export interface Address {
-    id: string;
-    name: string;
-    phone: string;
-    street: string;
-    city: string;
-    state: string;
-    pincode: string;
-    isDefault: boolean;
-}
-
-export interface Order {
-    id: string;
-    userId: string;
-    items: CartItem[];
-    total: number;
-    address: Address;
-    status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
-    date: string;
-    paymentMethod: string;
-}
+// Re-export types for backward compatibility
+export type { Product, CartItem, User, Address, Order };
 
 // Initialize default products
 export const initializeProducts = (): Product[] => {

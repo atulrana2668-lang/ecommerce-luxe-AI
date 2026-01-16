@@ -5,7 +5,8 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import { getProducts, getCartItemCount, getWishlist, addToCart, addToWishlist, removeFromWishlist, isInWishlist } from '@/utils/storage';
+import { getCartItemCount, getWishlist, addToCart, addToWishlist, removeFromWishlist, isInWishlist } from '@/utils/storage';
+import { getAllProducts } from '@/src/services/api';
 import type { Product } from '@/utils/storage';
 import styles from '@/styles/Home.module.css';
 
@@ -16,9 +17,18 @@ export default function Home() {
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
     useEffect(() => {
-        // Initialize products and counts
-        const allProducts = getProducts();
-        setProducts(allProducts);
+        const fetchProducts = async () => {
+            try {
+                const response = await getAllProducts();
+                if (response.success) {
+                    setProducts(response.data.products);
+                }
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+            }
+        };
+
+        fetchProducts();
         setCartCount(getCartItemCount());
         setWishlistCount(getWishlist().length);
     }, []);

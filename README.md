@@ -1,6 +1,6 @@
 # LUXE - Premium Fashion E-commerce Website
 
-A fully functional, modern e-commerce website built with Next.js and TypeScript. Features a beautiful, premium design inspired by Flipkart with local storage as the database.
+A **production-ready**, modern e-commerce website built with Next.js 14 and TypeScript. Features a stunning, premium design with complete authentication, AI chatbot, and seamless shopping experience.
 
 ## ✨ Features
 
@@ -10,13 +10,26 @@ A fully functional, modern e-commerce website built with Next.js and TypeScript.
 - **Search Functionality**: Quick search across all products
 - **Product Details**: Comprehensive product pages with size/color selection
 - **Wishlist**: Save favorite items for later
-- **Shopping Cart**: Full cart management with quantity controls
+- **Shopping Cart**: Full cart management with product images and quantity controls
+- **Loading Skeletons**: Smooth loading states for better UX
+
+### 🔐 User Authentication
+- **User Registration**: Full signup with password strength indicator
+- **User Login**: Secure authentication with JWT tokens
+- **Password Recovery**: Forgot password functionality
+- **Profile Management**: View and manage account details
+- **Session Persistence**: Stay logged in across browser sessions
 
 ### 💳 Checkout & Orders
+- **Smart Pre-fill**: Auto-fills user data when logged in
 - **Multi-step Checkout**: Contact info, shipping address, and payment method selection
 - **Order Management**: View order history and track status
 - **Multiple Payment Options**: Cash on Delivery, Card, and UPI
 - **Order Confirmation**: Success page with order details
+
+### 🤖 AI Features
+- **Smart Chatbot**: AI-powered customer support assistant
+- **Gemini Integration**: Powered by Google's Gemini AI
 
 ### 🎨 Design Features
 - **Premium UI**: Modern gradient designs and smooth animations
@@ -24,9 +37,16 @@ A fully functional, modern e-commerce website built with Next.js and TypeScript.
 - **Micro-interactions**: Hover effects and smooth transitions
 - **Glassmorphism**: Modern UI effects throughout
 - **Custom Scrollbars**: Styled scrollbars matching the theme
+- **Custom Favicon**: Brand-consistent favicon
+
+### 📄 Legal & Policy Pages
+- **Terms of Service**: Complete terms and conditions
+- **Privacy Policy**: GDPR-compliant privacy policy
+- **Forgot Password**: Account recovery flow
 
 ### 💾 Data Management
-- **Local Storage**: All data persisted in browser local storage
+- **MongoDB Ready**: Full backend with database models
+- **Local Storage Fallback**: Works offline with local storage
 - **12 Sample Products**: Pre-loaded with diverse product catalog
 - **Persistent Cart**: Cart items saved across sessions
 - **Order History**: Complete order tracking

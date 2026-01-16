@@ -122,3 +122,22 @@
 .toggleButton:hover {
     transform: scale(1.1);
 }
+
+.typingDot {
+    animation: bounce 1.4s infinite ease-in-out both;
+    font-size: 0.8rem;
+    color: #667eea;
+}
+
+@keyframes bounce {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
+}

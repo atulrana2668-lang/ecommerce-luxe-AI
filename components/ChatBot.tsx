@@ -1,11 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from '@/styles/ChatBot.module.css';
 
-// ✅ Correct API Key from your screenshot
-const API_KEY = "AIzaSyBJD6ePnmry0OViSydchpZ9YtuIAjoWamk";
-
-// ✅ Update: Using gemini-2.0-flash (confirmed available in your API key)
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+// Using environment variable for API key (secure)
+const API_URL = '/api/chat';
 
 export default function ChatBot() {
     const [isOpen, setIsOpen] = useState(false);
@@ -30,26 +27,30 @@ export default function ChatBot() {
         setIsLoading(true);
 
         try {
+            // Use our secure backend API instead of direct Gemini call
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: userMessage }] }]
-                })
+                body: JSON.stringify({ message: userMessage })
             });
 
             const data = await response.json();
 
-            // Handle Potential API Errors
-            if (data.error) {
-                console.error("API Error Response:", data.error);
-                setMessages(prev => [...prev, { role: 'ai', text: `AI Error: ${data.error.message}`, isError: true }]);
+            if (!response.ok) {
+                setMessages(prev => [...prev, {
+                    role: 'ai',
+                    text: data.message || 'Sorry, I encountered an error. Please try again.',
+                    isError: true
+                }]);
             } else {
-                const aiText = data.candidates[0].content.parts[0].text;
-                setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
+                setMessages(prev => [...prev, { role: 'ai', text: data.text }]);
             }
         } catch (err) {
-            setMessages(prev => [...prev, { role: 'ai', text: "Network Error: Please check your internet connection.", isError: true }]);
+            setMessages(prev => [...prev, {
+                role: 'ai',
+                text: "Network Error: Please check your internet connection.",
+                isError: true
+            }]);
         } finally {
             setIsLoading(false);
         }
@@ -65,41 +66,46 @@ export default function ChatBot() {
 
             <div className={styles.chatContainer} style={{ display: isOpen ? 'flex' : 'none' }}>
                 <div className={styles.chatHeader} onClick={() => setIsOpen(false)}>
-                    <span>🛍️ Shopping Assistant</span>
-                    <span style={{ cursor: 'pointer' }}>▼</span>
+                    <span>🛍️ LUXE Shopping Assistant</span>
+                    <span style={{ cursor: 'pointer' }}>✕</span>
                 </div>
                 <div className={styles.chatBox} ref={chatBoxRef}>
                     {messages.length === 0 && (
-                        <p style={{ textAlign: 'center', color: '#888', marginTop: '20px' }}>
-                            Hello! How can I help you today?
-                        </p>
+                        <div style={{ textAlign: 'center', color: '#888', marginTop: '20px', padding: '1rem' }}>
+                            <p style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>👋</p>
+                            <p style={{ fontWeight: '600', marginBottom: '0.5rem' }}>Hello! I&apos;m your LUXE assistant</p>
+                            <p style={{ fontSize: '0.85rem' }}>Ask me about our products, sizes, prices, or any shopping help!</p>
+                        </div>
                     )}
                     {messages.map((msg, index) => (
                         <div
                             key={index}
-                            style={msg.role === 'user'
-                                ? { textAlign: 'right', margin: '8px', color: '#1a73e8' }
-                                : msg.isError
-                                    ? { color: 'red', margin: '8px' }
-                                    : { textAlign: 'left', margin: '8px', color: '#333', background: '#e8f0fe', padding: '10px', borderRadius: '12px' }
-                            }
+                            className={msg.role === 'user' ? styles.userMessage : msg.isError ? styles.errorMessage : styles.aiMessage}
                         >
-                            <strong>{msg.role === 'user' ? 'You' : 'AI'}:</strong> {msg.text}
+                            <strong>{msg.role === 'user' ? 'You' : '🤖 LUXE'}:</strong> {msg.text}
                         </div>
                     ))}
-                    {isLoading && <div style={{ textAlign: 'left', margin: '8px', color: '#888' }}>Typing...</div>}
+                    {isLoading && (
+                        <div className={styles.aiMessage}>
+                            <span style={{ display: 'inline-flex', gap: '4px' }}>
+                                <span className={styles.typingDot}>●</span>
+                                <span className={styles.typingDot} style={{ animationDelay: '0.2s' }}>●</span>
+                                <span className={styles.typingDot} style={{ animationDelay: '0.4s' }}>●</span>
+                            </span>
+                        </div>
+                    )}
                 </div>
                 <div className={styles.inputArea}>
                     <input
                         type="text"
                         className={styles.userInput}
-                        placeholder="Ask me anything..."
+                        placeholder="Ask me about products, prices..."
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && askAI()}
                     />
-                    <button className={styles.sendBtn} onClick={askAI}>
-                        {'>'}
+                    <button className={styles.sendBtn} onClick={askAI} disabled={isLoading}>
+                        {isLoading ? '...' : '➤'}
                     </button>
                 </div>
             </div>

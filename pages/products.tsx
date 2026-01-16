@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import { getProducts, filterProducts, getCartItemCount, getWishlist, addToCart, addToWishlist, removeFromWishlist, isInWishlist } from '@/utils/storage';
+import { filterProducts, getCartItemCount, getWishlist, addToCart, addToWishlist, removeFromWishlist, isInWishlist } from '@/utils/storage';
+import { getAllProducts } from '@/src/services/api';
 import type { Product } from '@/utils/storage';
 import styles from '@/styles/Products.module.css';
 
@@ -19,10 +20,25 @@ export default function Products() {
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
     const [sortBy, setSortBy] = useState<'price-low' | 'price-high' | 'rating' | 'popular'>('popular');
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const allProducts = getProducts();
-        setProducts(allProducts);
+        const fetchProducts = async () => {
+            try {
+                setIsLoading(true);
+                const response = await getAllProducts();
+                if (response.success) {
+                    setProducts(response.data.products);
+                    setFilteredProducts(response.data.products);
+                }
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProducts();
         setCartCount(getCartItemCount());
         setWishlistCount(getWishlist().length);
     }, []);
@@ -34,6 +50,8 @@ export default function Products() {
     }, [category]);
 
     useEffect(() => {
+        if (products.length === 0) return;
+
         let result = products;
 
         // Filter by search query
@@ -91,7 +109,9 @@ export default function Products() {
                         <h1 className={styles.pageTitle}>
                             {q ? `Search Results for "${q}"` : selectedCategory === 'All' ? 'All Products' : `${selectedCategory}'s Fashion`}
                         </h1>
-                        <p className={styles.productCount}>{filteredProducts.length} Products Found</p>
+                        <p className={styles.productCount}>
+                            {isLoading ? 'Loading...' : `${filteredProducts.length} Products Found`}
+                        </p>
                     </div>
 
                     <div className={styles.productsContainer}>
@@ -159,7 +179,18 @@ export default function Products() {
 
                         {/* Products Grid */}
                         <div className={styles.productsGrid}>
-                            {filteredProducts.length > 0 ? (
+                            {isLoading ? (
+                                // Loading skeleton
+                                [...Array(8)].map((_, i) => (
+                                    <div key={i} style={{
+                                        background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                                        backgroundSize: '200% 100%',
+                                        animation: 'shimmer 1.5s infinite',
+                                        borderRadius: '16px',
+                                        height: '380px'
+                                    }} />
+                                ))
+                            ) : filteredProducts.length > 0 ? (
                                 filteredProducts.map((product) => (
                                     <ProductCard
                                         key={product.id}

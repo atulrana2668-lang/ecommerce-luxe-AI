@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getCart, updateCartItemQuantity, removeFromCart, getCartTotal, getCartItemCount, getWishlist } from '@/utils/storage';
@@ -68,9 +69,17 @@ export default function Cart() {
                                 {cartItems.map((item) => (
                                     <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className={styles.cartItem}>
                                         <div className={styles.itemImage}>
-                                            <div className={styles.imagePlaceholder}>
-                                                <span className={styles.imageIcon}>👕</span>
-                                            </div>
+                                            <Image
+                                                src={item.image}
+                                                alt={item.name}
+                                                width={100}
+                                                height={100}
+                                                style={{
+                                                    objectFit: 'cover',
+                                                    borderRadius: '8px',
+                                                    background: '#f8f9fa'
+                                                }}
+                                            />
                                         </div>
 
                                         <div className={styles.itemDetails}>

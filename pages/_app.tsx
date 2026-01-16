@@ -1,19 +1,24 @@
 import '@/styles/globals.css'
 import ChatBot from '@/components/ChatBot';
+import { AuthProvider } from '@/utils/AuthContext';
+import { ToastProvider } from '@/components/Toast';
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <>
-            <Head>
-                <title>LUXE - Premium Fashion E-commerce</title>
-                <meta name="description" content="Discover the latest trends in fashion with LUXE. Premium clothing for men and women at unbeatable prices." />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <Component {...pageProps} />
-            <ChatBot />
-        </>
+        <AuthProvider>
+            <ToastProvider>
+                <Head>
+                    <title>LUXE - Premium Fashion E-commerce</title>
+                    <meta name="description" content="Discover the latest trends in fashion with LUXE. Premium clothing for men and women at unbeatable prices." />
+                    <meta name="viewport" content="width=device-width, initial-scale=1" />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+                <Component {...pageProps} />
+                <ChatBot />
+            </ToastProvider>
+        </AuthProvider>
     )
 }
+
