@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { findProductsForAI } from '../utils/productSearch';
 
-const API_KEY = process.env.GEMINI_API_KEY;
+
 const MODEL = "gemini-1.5-flash";
 
 /**
@@ -9,6 +9,7 @@ const MODEL = "gemini-1.5-flash";
  * Triggered by POST /api/chat
  */
 export const handleChat = async (req: Request, res: Response) => {
+    const API_KEY = process.env.GEMINI_API_KEY;
     try {
         const { message } = req.body;
 
