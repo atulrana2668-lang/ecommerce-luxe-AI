@@ -18,68 +18,65 @@ export const handleChat = async (req: Request, res: Response) => {
         }
 
         if (!API_KEY) {
+            console.error('❌ CHAT ERROR: GEMINI_API_KEY is missing');
             return res.status(500).json({
                 success: false,
-                message: 'AI service not configured. Please set GEMINI_API_KEY.'
+                message: 'AI service not configured.'
             });
         }
 
-        // 1. Search for real-time products based on user query
+        console.log(`💬 AI Chat: "${message}"`);
+
+        // Search for relevant products
         const products = await findProductsForAI(message);
+        console.log(`🔍 Found ${products.length} query-related products`);
 
-        // 2. Construct a System Prompt dynamically
-        const systemPrompt = `You are a helpful sales assistant for Luxe Store. Here is the real-time product availability based on the user's query: ${JSON.stringify(products)}. Answer strictly based on this data. If stock is 0, say it's out of stock. Be friendly, concise, and encourage the user to buy.`;
-
-        // 3. Prepare Gemini API payload
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+        const systemPrompt = `You are the LUXE Store Assistant. Recommend products only from this list: ${JSON.stringify(products)}. If nothing matches, say you couldn't find exactly that but offer general help.`;
 
         const payload = {
             contents: [{
-                parts: [{
-                    text: `${systemPrompt}\n\nUser Question: ${message}\n\nLuxe Assistant:`
-                }]
-            }],
-            generationConfig: {
-                temperature: 0.7,
-                maxOutputTokens: 500
-            }
+                parts: [{ text: `${systemPrompt}\n\nUser: ${message}` }]
+            }]
         };
 
-        // 4. Call Gemini API
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         const data: any = await response.json();
 
         if (data.error) {
-            console.error("Gemini API Error:", data.error.message);
-            return res.status(500).json({ success: false, message: "AI Error", details: data.error.message });
-        }
-
-        if (!data.candidates || data.candidates.length === 0) {
-            return res.status(200).json({
-                success: true,
-                text: "I'm sorry, I couldn't generate a response. Could you please rephrase?"
+            console.error('❌ GEMINI ERROR:', data.error.message);
+            return res.status(500).json({
+                success: false,
+                message: 'AI Error',
+                details: data.error.message
             });
         }
 
-        const aiResponse = data.candidates[0].content.parts[0].text;
+        const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        // 5. Return response to frontend
+        if (!aiResponse) {
+            console.error('❌ AI ERROR: No response in payload', JSON.stringify(data));
+            return res.status(500).json({ success: false, message: 'No AI response' });
+        }
+
+        console.log('✅ AI responded successfully');
         return res.status(200).json({
             success: true,
             text: aiResponse,
-            products // Include products found for UI reference if needed
+            reply: aiResponse // for compatibility
         });
 
     } catch (error: any) {
-        console.error("Chat Controller Error:", error);
+        console.error('❌ CHAT CONTROLLER ERROR:', error.message);
         return res.status(500).json({
             success: false,
-            message: "Connection Failed",
+            message: 'Connection Failed',
             details: error.message
         });
     }
