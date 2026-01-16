@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { findProductsForAI } from '../utils/productSearch';
 
 const API_KEY = process.env.GEMINI_API_KEY;
-const MODEL = "gemini-2.0-flash";
+const MODEL = "gemini-1.5-flash";
 
 /**
  * Handle AI Chat with Context Awareness
