@@ -40,6 +40,10 @@ export default function Cart() {
     const tax = subtotal * 0.18; // 18% GST
     const total = subtotal + shipping + tax;
 
+    // Calculate total quantity of all items (not just unique items)
+    const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+    const itemLabel = totalQuantity === 1 ? 'item' : 'items';
+
     return (
         <>
             <Head>
@@ -140,7 +144,7 @@ export default function Cart() {
                                 <h2 className={styles.summaryTitle}>Order Summary</h2>
 
                                 <div className={styles.summaryRow}>
-                                    <span>Subtotal ({cartItems.length} items)</span>
+                                    <span>Subtotal ({totalQuantity} {itemLabel})</span>
                                     <span>₹{subtotal.toLocaleString()}</span>
                                 </div>
 

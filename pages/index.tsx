@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
+import { ProductSkeletonGrid } from '@/components/ProductSkeleton';
 import { getCartItemCount, getWishlist, addToCart, addToWishlist, removeFromWishlist, isInWishlist } from '@/utils/storage';
 import { getAllProducts } from '@/src/services/api';
 import type { Product } from '@/utils/storage';
@@ -12,6 +13,7 @@ import styles from '@/styles/Home.module.css';
 
 export default function Home() {
     const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
     const [cartCount, setCartCount] = useState(0);
     const [wishlistCount, setWishlistCount] = useState(0);
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -19,12 +21,15 @@ export default function Home() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
+                setLoading(true);
                 const response = await getAllProducts();
                 if (response.success) {
                     setProducts(response.data.products);
                 }
             } catch (error) {
                 console.error('Failed to fetch products:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -162,17 +167,21 @@ export default function Home() {
                                 View All →
                             </Link>
                         </div>
-                        <div className="grid grid-4">
-                            {featuredProducts.map((product) => (
-                                <ProductCard
-                                    key={product.id}
-                                    {...product}
-                                    onAddToCart={() => handleAddToCart(product)}
-                                    onAddToWishlist={() => handleToggleWishlist(product)}
-                                    onBuyNow={() => handleBuyNow(product)}
-                                    isInWishlist={isInWishlist(product.id)}
-                                />
-                            ))}
+                        <div className="grid grid-4" style={{ minHeight: loading ? '600px' : 'auto' }}>
+                            {loading ? (
+                                <ProductSkeletonGrid count={8} />
+                            ) : (
+                                featuredProducts.map((product) => (
+                                    <ProductCard
+                                        key={product.id}
+                                        {...product}
+                                        onAddToCart={() => handleAddToCart(product)}
+                                        onAddToWishlist={() => handleToggleWishlist(product)}
+                                        onBuyNow={() => handleBuyNow(product)}
+                                        isInWishlist={isInWishlist(product.id)}
+                                    />
+                                ))
+                            )}
                         </div>
                     </div>
                 </section>

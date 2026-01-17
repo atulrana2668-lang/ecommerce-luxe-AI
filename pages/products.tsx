@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
+import { ProductSkeletonGrid } from '@/components/ProductSkeleton';
 import { filterProducts, getCartItemCount, getWishlist, addToCart, addToWishlist, removeFromWishlist, isInWishlist } from '@/utils/storage';
 import { getAllProducts } from '@/src/services/api';
 import type { Product } from '@/utils/storage';
@@ -180,16 +181,7 @@ export default function Products() {
                         {/* Products Grid */}
                         <div className={styles.productsGrid}>
                             {isLoading ? (
-                                // Loading skeleton
-                                [...Array(8)].map((_, i) => (
-                                    <div key={i} style={{
-                                        background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-                                        backgroundSize: '200% 100%',
-                                        animation: 'shimmer 1.5s infinite',
-                                        borderRadius: '16px',
-                                        height: '380px'
-                                    }} />
-                                ))
+                                <ProductSkeletonGrid count={12} />
                             ) : filteredProducts.length > 0 ? (
                                 filteredProducts.map((product) => (
                                     <ProductCard
