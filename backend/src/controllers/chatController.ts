@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { findProductsForAI } from '../utils/productSearch';
-
-
-const MODEL = "gemini-1.5-flash";
 
 /**
  * Handle AI Chat with Context Awareness
@@ -31,37 +29,21 @@ export const handleChat = async (req: Request, res: Response) => {
         const products = await findProductsForAI(message);
         console.log(`🔍 Found ${products.length} query-related products`);
 
+        // Initialize Gemini SDK
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
         const systemPrompt = `You are the LUXE Store Assistant. Recommend products only from this list: ${JSON.stringify(products)}. If nothing matches, say you couldn't find exactly that but offer general help.`;
 
-        const payload = {
-            contents: [{
-                parts: [{ text: `${systemPrompt}\n\nUser: ${message}` }]
-            }]
-        };
+        const prompt = `${systemPrompt}\n\nUser: ${message}`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
-
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const data: any = await response.json();
-
-        if (data.error) {
-            console.error('❌ GEMINI ERROR:', data.error.message);
-            return res.status(500).json({
-                success: false,
-                message: 'AI Error',
-                details: data.error.message
-            });
-        }
-
-        const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        // Generate content using SDK
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const aiResponse = response.text();
 
         if (!aiResponse) {
-            console.error('❌ AI ERROR: No response in payload', JSON.stringify(data));
+            console.error('❌ AI ERROR: No response generated');
             return res.status(500).json({ success: false, message: 'No AI response' });
         }
 
@@ -76,8 +58,9 @@ export const handleChat = async (req: Request, res: Response) => {
         console.error('❌ CHAT CONTROLLER ERROR:', error.message);
         return res.status(500).json({
             success: false,
-            message: 'Connection Failed',
+            message: 'AI Service Error',
             details: error.message
         });
     }
 };
+
