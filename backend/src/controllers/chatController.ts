@@ -31,7 +31,7 @@ export const handleChat = async (req: Request, res: Response) => {
 
         // Initialize Gemini SDK
         const genAI = new GoogleGenerativeAI(API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
         const systemPrompt = `You are the LUXE Store Assistant. Recommend products only from this list: ${JSON.stringify(products)}. If nothing matches, say you couldn't find exactly that but offer general help.`;
 
