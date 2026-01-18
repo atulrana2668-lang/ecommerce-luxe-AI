@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type { Product, ApiResponse, ProductsResponse, ProductResponse } from '@/src/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// Use relative path - works for local dev and Vercel deployment
+const API_BASE_URL = '/api';
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,

@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from '@/styles/ChatBot.module.css';
 
-// Using environment variable for API URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL
-    ? `${process.env.NEXT_PUBLIC_API_URL}/chat`
-    : '/api/chat';
+// Simple relative path - works for both local dev and Vercel deployment
+const API_URL = '/api/chat';
 
 export default function ChatBot() {
     const [isOpen, setIsOpen] = useState(false);
